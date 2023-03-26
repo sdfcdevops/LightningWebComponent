@@ -22,6 +22,6 @@ describe('c-hello-lighting-web-component', () => {
         // const div = element.shadowRoot.querySelector('div');
         //expect(1).toBe(1);
         const div = element.shadowRoot.querySelector('div');
-        expect(div.textContent).toBe('Hi, Tarun Jest Test!');
+        expect(div.textContent).toBe('Hi, Tarun Jest Test!'); 
     });
 });
