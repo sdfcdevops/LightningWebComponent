@@ -1,0 +1,11 @@
+<template>
+    <lightning-card title="Creating Custom Note" icon-name="action:new_note">
+        <div class="slds-var-p-around_x-small">
+        <lightning-input label="Note Title" value={noteTitle} placeholder="Type Enter Note Title .... "  required onchange={handleNoteTitleChange}></lightning-input>
+        <br/>
+        <lightning-input-rich-text label="Note Body" value={noteBody} placeholder="Type Enter Note Content .... " onchange={handleNoteBodyChange}></lightning-input-rich-text> 
+        <br />
+        <lightning-button label="Save" onclick={handleSave}></lightning-button>
+        </div>
+    </lightning-card>
+</template>
