@@ -1,0 +1,16 @@
+<apex:page>
+   <apex:includeLightning />
+   <div id="lightning"></div>
+   <script>
+      $Lightning.use("c:AppForVFRegister", function() {
+         $Lightning.createComponent("c:studentRegistration",
+            {
+               // Pass any necessary parameters here
+            },
+            "lightning",
+            function(cmp) {
+               // Do something after the component is created
+            });
+      });
+   </script>
+</apex:page>
