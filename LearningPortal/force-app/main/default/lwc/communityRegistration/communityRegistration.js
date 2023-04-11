@@ -48,7 +48,7 @@ export default class CommunityRegistration extends LightningElement {
         this.userType = event.detail.value;
         console.log("Select an Category > : "+this.userType);
         this.userType = event.detail.value;
-        if (this.userType.length != 1) {
+        if (this.userType.length >= 1) {
             this.errorBlock = true;
             this.errorMessage = 'Complete Category field.';
         } else {
