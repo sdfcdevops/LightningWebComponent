@@ -2,15 +2,12 @@ import { LightningElement,track,wire } from 'lwc';
 import isguest from '@salesforce/user/isGuest';
 import createUser from '@salesforce/apex/CommunityRegistrationController.createUser';
 import checkApiCallAccess from '@salesforce/apex/CommunityRegistrationController.checkApiCallAccess';
+import CommunityUserCheck from '@salesforce/apex/CommunityRegistrationController.CommunityUserCheck'
+import isEmailExist from '@salesforce/apex/CommunityRegistrationController.isEmailExist';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 
 export default class CommunityRegistration extends LightningElement {
-
- 
-
-   @track showTermsAndConditions;
-   @track showTermsAndConditionsLoading = false;
     @track userType = 0;
     @track title;
     @track firstName;
@@ -23,17 +20,27 @@ export default class CommunityRegistration extends LightningElement {
     @track showPasswordError = false;
     @track errorMessage = '';
     @track checkApexClass = '';
+    @track errorEmailDupicateMessage = '';
     @track errorBlock = false;
-
+    @track errorEmailBlock = false;
+    @track errorCheck;
+    @track communityNickname;
 
     //This method is for get the user agree term & Condtion yes or not !
     handleAgreeTermChange(event) {
+
+      checkApiCallAccess({ name: 'Student'}).then(result => {
+
+        //console.log('variable:', result);
+
+      });
+     
           if (event.target.checked) {
             this.agreeTerm = true;
           } else {
             this.agreeTerm = false;
           }
-          console.log("I agree to the Terms & Conditions Value > : "+this.agreeTerm);
+          //console.log("I agree to the Terms & Conditions Value > : "+this.agreeTerm);
       }
 
       options = [
@@ -41,12 +48,10 @@ export default class CommunityRegistration extends LightningElement {
         { label: 'Student Alumni', value: '2' },
       
       ];
-     
-
 
       handleRegTypeChange(event) {
         this.userType = event.detail.value;
-        console.log("Select an Category > : "+this.userType);
+        //console.log("Select an Category > : "+this.userType);
         this.userType = event.detail.value;
         if (this.userType.length == 0) {
             this.errorBlock = true;
@@ -60,6 +65,12 @@ export default class CommunityRegistration extends LightningElement {
 
       handleTitleChange(event){
         this.title = event.target.value;
+        const eventData = new ShowToastEvent({
+          title: 'Success',
+          message: 'Account created successfully!',
+          variant: 'success',
+      });
+      this.dispatchEvent(eventData);
       }
      
       handleFnameChange(event){
@@ -75,8 +86,24 @@ export default class CommunityRegistration extends LightningElement {
         if (!event.target.validity.valid) {
           this.errorEmailMessage = 'Please enter a valid email address';
         } else {
-          this.errorEmailMessage = '';
-          this.email = event.detail.value;
+         
+          //CommunityUserCheck({ email: event.detail.value}).then(result => {
+            isEmailExist({ email: event.detail.value}).then(result => {
+          
+            if(result){
+              this.errorEmailBlock = true;
+              this.errorEmailDupicateMessage = 'E-Mail address already exists!';
+            }
+            else {
+              this.errorEmailDupicateMessage = '';
+              this.errorEmailMessage = '';
+              this.errorEmailBlock = false;
+              this.email = event.detail.value;
+            }
+            //console.log('variable:', result);
+    
+          });
+         
         }
 
 
@@ -155,42 +182,67 @@ export default class CommunityRegistration extends LightningElement {
           this.errorBlock = false;
           this.errorMessage = '';
 
-          createUser({ userType: this.userType,title:this.title, firstName: this.firstName, lastName: this.lastName, email: this.email, password: this.password}
-          ) .then(result => {
+          isEmailExist({ email: this.email })
+            .then((result) => {
 
-            console.log('variable:', result);
+                console.log('login result---'+result, typeof result);
+                
+                if(result != null && result != undefined && result == true){
 
-          });
-          
-          //Request apex class controller for create new user
-      }
+                  this.errorEmailBlock = true;
+                  this.errorEmailDupicateMessage = 'E-Mail address already exists!';
+                 // this.errorTooltipDisplayData.email = 'tooltiptext tooltipShow tooltipError';
 
+                 // this.showTermsAndConditionsLoading = false;
 
+              } else {
 
-      }
-      // Register Button Function 
-    //  handleRegisterClickk() {
+                this.errorEmailBlock = false;
+                this.errorEmailDupicateMessage = '';
 
-        // getRecord({ param1: this.param1, param2: this.param2 });
+                createUser({ userType: this.userType,title:this.title, communityNickname: this.firstName,firstName: this.firstName, lastName: this.lastName, email: this.email, password: this.password}
+                ).then((result) => {
+                                        
+                              if(result){            
+                                            
+                                 //window.location.href = result;
 
-        // CommunityUserCheck({email:this.email}).then(result => {
-        //   console.log('success'+result);
-        // })
+                                 const event = new ShowToastEvent({
+                                  title: 'Success',
+                                  message: 'Account created successfully!',
+                                  variant: 'success',
+                              });
+                              this.dispatchEvent(event);
+                              this.userType = null;
+                              this.title = '';
+                              this.firstName = '';
+                              this.lastName = '';
+                              this.password = '';
+                              this.confirmPassword = '';
+                              this.agreeTerm = false;
 
-        // createCommunityUser({ Salutation: this.selectedSalutation, firstName: this.firstName, lastName: this.lastName, email: this.email, password: this.password})
-        // .then(result => {
+                          }
+                 }).catch((error) => {
+                           this.error = error;
+                           console.log('error-',error);   
+                           if(error && error.body && error.body.message){
 
-        //   console.log('Result name'+result[0]);
+                          this.showTermsAndConditions = false;
+                          this.errorCheck = true;
+                          this.errorMessage = error.body.message;
+           
+                           }           
+        
+                  });
+              }
+            }).catch((error) => {
+                    this.error = error;
 
-        // });
-
-
-        // if (this.password === this.confirmPassword) {
-        //     // Passwords match, do something
-        //     this.showPasswordError = false; // hide error message if it was previously displayed
-        //   } else {
-        //     // Passwords do not match, show error message
-        //     this.showPasswordError = true;
-        //   }
-     // }
+                      if(error && error.body && error.body.message){
+                          
+                          console.log('error msg-', error.body.message);
+                      }
+                });
+        }
+  }
 }
