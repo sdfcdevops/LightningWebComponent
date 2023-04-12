@@ -1,0 +1,28 @@
+
+  .background-image {
+    background-image: url('path/to/background-image.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .registration-form {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    max-width: 50rem;
+    width: 100%;
+  }
+
+  .form-section {
+    margin-bottom: 2rem;
+  }
+
+  .submit-button {
+    display: flex;
+    justify-content: center;
+  }

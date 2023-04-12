@@ -1,0 +1,29 @@
+<template>
+    <lightning-card title="Register for the Community">
+        <div class="slds-p-around_medium">
+         
+          
+
+            <lightning-combobox label="Select an Category" options={options} value={selectedValue} onchange={handleRegTypeChange} required></lightning-combobox>
+            <lightning-input type="text" label="Title" onchange={handleTitleChange} required></lightning-input>
+            <lightning-input type="text" label="First Name" onchange={handleFnameChange} required></lightning-input>
+            <lightning-input type="text" label="Last Name" onchange={handleLnameChange} required></lightning-input>
+            <lightning-input type="email" label="Email" onchange={handleEmailChange} required></lightning-input>
+              <p class="slds-text-color_error">{errorEmailMessage}</p>
+              <div if:true={errorEmailBlock} class="slds-text-color_error">{errorEmailDupicateMessage}</div>
+              <br />
+              
+            <lightning-input label="Password" type="password" value={password} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handlePasswordChange} required ></lightning-input>
+            <lightning-input label="Confirm Password" type="password" value={confirmPassword} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handleConfirmPasswordChange} required></lightning-input>
+                <div if:true={showPasswordError} class="slds-text-color_error">Passwords do not match</div>
+                <br/>
+            <lightning-input type="checkbox" label="I agree to the Terms & Conditions." onchange={handleAgreeTermChange} required></lightning-input>
+              <br />
+              <div if:true={errorBlock} class="slds-align_absolute-center slds-text-color_error">{errorMessage}</div>
+              <br />
+              <button class="slds-button slds-button_outline-brand" onclick={handleRegisterClick}>Sign Up</button>
+              <br />
+             
+        </div>
+    </lightning-card>
+ </template>
