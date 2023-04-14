@@ -52,7 +52,7 @@
           </fieldset>
 
 
-             
+         
             
             <fieldset class="slds-form-element slds-form-element_compound">
               <legend class="slds-form-element__legend slds-form-element__label"></legend>
@@ -92,7 +92,8 @@
                       <div class="slds-form-element__control">
                         <!-- <input type="text" id="input-01" class="slds-input" /> -->
                         <lightning-input type="text" label="Title" onchange={handleTitleChange} value={title} required></lightning-input>
-        
+                        <lightning-icon size="x-small" class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default" icon-name="utility:search"></lightning-icon>
+                        <input type="text" id="text-input-id-1" placeholder="Type Text to Search" class="slds-input" />
 
                       </div>
                     </div>
@@ -115,7 +116,7 @@
 
 
             
-            
+           
               <fieldset class="slds-form-element slds-form-element_compound">
                 <legend class="slds-form-element__legend slds-form-element__label"></legend>
                 <div class="slds-form-element__control">
@@ -124,9 +125,21 @@
                       <div class="slds-form-element">
                        
                         <div class="slds-form-element__control">
+                          <lightning-input label="Input Label" type="text">
+                            <lightning-icon icon-name="utility:search" size="small" slot="suffix"></lightning-icon>
+                        </lightning-input>
                           <!-- <input type="text" id="input-01" class="slds-input" /> -->
-                          <lightning-input label="Password" type="password" value={password} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handlePasswordChange} required ></lightning-input>
-           
+                          <lightning-input label="Password" type={passwordFieldType} value={password} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handlePasswordChange} required >
+                            
+  <lightning-icon icon-name={passwordIconName}
+                          slot="suffix" onclick={togglePasswordVisibility}>
+                      </lightning-icon>
+                          </lightning-input>
+
+                          <lightning-icon icon-name={passwordIconName}
+                          slot="suffix" onclick={togglePasswordVisibility}>
+                      </lightning-icon>   
+                        
                         </div>
                       </div>
                     </div>
