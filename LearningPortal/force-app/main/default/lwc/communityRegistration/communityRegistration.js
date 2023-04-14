@@ -29,10 +29,22 @@ export default class CommunityRegistration extends LightningElement {
     @track passwordFieldType = 'password';
     @track passwordIconName = 'utility:hide';
 
+    @track confirmpasswordFieldType = 'password';
+    @track confirmpasswordIconName = 'utility:hide';
+
+    
+
+
     togglePasswordVisibility() {
       this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
       this.passwordIconName = this.passwordIconName === 'utility:hide' ? 'utility:preview' : 'utility:hide';
     }
+
+    toggleConfirmPasswordVisibility() {
+      this.confirmpasswordFieldType = this.confirmpasswordFieldType === 'password' ? 'text' : 'password';
+      this.confirmpasswordIconName = this.confirmpasswordIconName === 'utility:hide' ? 'utility:preview' : 'utility:hide';
+    }
+
 
     
     //This method is for get the user agree term & Condtion yes or not !

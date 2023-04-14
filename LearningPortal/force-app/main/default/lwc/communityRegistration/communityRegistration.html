@@ -92,9 +92,7 @@
                       <div class="slds-form-element__control">
                         <!-- <input type="text" id="input-01" class="slds-input" /> -->
                         <lightning-input type="text" label="Title" onchange={handleTitleChange} value={title} required></lightning-input>
-                        <lightning-icon size="x-small" class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default" icon-name="utility:search"></lightning-icon>
-                        <input type="text" id="text-input-id-1" placeholder="Type Text to Search" class="slds-input" />
-
+                       
                       </div>
                     </div>
                   </div>
@@ -114,6 +112,13 @@
               </div>
             </fieldset>
 
+            <!-- <lightning-button-icon class="btnIconOverlay" icon-name="utility:adduser">
+            </lightning-button-icon>
+            <lightning-icon class="btnIconOverlay" icon-name={passwordIconName}
+            slot="suffix" onclick={togglePasswordVisibility}>
+        </lightning-icon>
+            <lightning-input type="search" name="To Address" value={email}>              
+            </lightning-input> -->
 
             
            
@@ -125,20 +130,25 @@
                       <div class="slds-form-element">
                        
                         <div class="slds-form-element__control">
-                          <lightning-input label="Input Label" type="text">
-                            <lightning-icon icon-name="utility:search" size="small" slot="suffix"></lightning-icon>
-                        </lightning-input>
+                         
                           <!-- <input type="text" id="input-01" class="slds-input" /> -->
-                          <lightning-input label="Password" type={passwordFieldType} value={password} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handlePasswordChange} required >
-                            
-  <lightning-icon icon-name={passwordIconName}
-                          slot="suffix" onclick={togglePasswordVisibility}>
-                      </lightning-icon>
-                          </lightning-input>
+                        
 
-                          <lightning-icon icon-name={passwordIconName}
-                          slot="suffix" onclick={togglePasswordVisibility}>
-                      </lightning-icon>   
+                          
+
+
+                      <lightning-button-icon class="btnIconOverlay" icon-name={passwordIconName} onclick={togglePasswordVisibility}>
+                      </lightning-button-icon>
+                      <!-- <lightning-icon class="btnIconOverlay" icon-name={passwordIconName}
+                      onclick={togglePasswordVisibility}>
+                  </lightning-icon> -->
+                  <lightning-input label="Password" type={passwordFieldType} value={password} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handlePasswordChange} required >
+                            
+
+                  </lightning-input>
+
+                      
+
                         
                         </div>
                       </div>
@@ -148,7 +158,18 @@
                        
                         <div class="slds-form-element__control">
                           <!-- <input type="text" id="input-02" class="slds-input" /> -->
-                          <lightning-input label="Confirm Password" type="password" value={confirmPassword} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handleConfirmPasswordChange} required></lightning-input>
+
+                          <lightning-button-icon class="btnIconOverlay" icon-name={confirmpasswordIconName} onclick={toggleConfirmPasswordVisibility}>
+                          </lightning-button-icon>
+                          <!-- <lightning-icon class="btnIconOverlay" icon-name={passwordIconName}
+                          onclick={togglePasswordVisibility}>
+                      </lightning-icon> -->
+                      <lightning-input label="Confirm Password" type={confirmpasswordFieldType} value={confirmPassword} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handleConfirmPasswordChange} required></lightning-input>      
+    
+                    
+
+
+                       
                 <div if:true={showPasswordError} class="slds-text-color_error">Passwords do not match</div>
                 <br/>
                         </div>
