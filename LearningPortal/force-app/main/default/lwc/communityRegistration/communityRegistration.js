@@ -85,7 +85,8 @@ export default class CommunityRegistration extends LightningElement {
             variant: 'error',
         });
         this.dispatchEvent(ErrorEvent);
-          this.errorEmailMessage = 'Please enter a valid email address';
+          this.errorEmailBlock = true;
+          this.errorEmailDupicateMessage = 'Please enter a valid email address';
         } else {
          
           //CommunityUserCheck({ email: event.detail.value}).then(result => {
@@ -199,8 +200,8 @@ export default class CommunityRegistration extends LightningElement {
                 
                 if(result != null && result !== undefined && result === true){
 
-                  this.errorEmailBlock = true;
-                  this.errorEmailDupicateMessage = 'E-Mail address already exists!';
+                  // this.errorEmailBlock = true;
+                  // this.errorEmailDupicateMessage = 'E-Mail address already exists!';
 
                   const ErrorEvent = new ShowToastEvent({
                     title: 'Error',
@@ -234,8 +235,8 @@ export default class CommunityRegistration extends LightningElement {
                               this.confirmPassword = '';
                               this.agreeTerm = false;
                               
-                              this.successBlock = true;
-                              this.successMessage = 'Account created successfully!';
+                              // this.successBlock = true;
+                              // this.successMessage = 'Account created successfully!';
 
                                const SuccessEvent = new ShowToastEvent({
                     title: 'Success',
