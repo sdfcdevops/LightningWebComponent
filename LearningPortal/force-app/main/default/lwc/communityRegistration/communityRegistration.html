@@ -1,29 +1,166 @@
 <template>
+  
     <lightning-card title="Register for the Community">
+   
         <div class="slds-p-around_medium">
          
-          
+          <!-- <fieldset class="slds-form-element slds-has-error">
+            <legend class="slds-form-element__legend slds-form-element__label">
+              <abbr class="slds-required" title="required">*</abbr>Radio Group Label</legend>
+            <div class="slds-form-element__control">
+              <div class="slds-radio_button-group">
+                <span class="slds-button slds-radio_button">
+                  <input type="radio" name="example-unique-name-204" id="example-unique-id-206" value="monday" aria-describedby="error-unique-id-205" />
+                  <label class="slds-radio_button__label" for="example-unique-id-206">
+                    <span class="slds-radio_faux">Student</span>
+                  </label>
+                </span>
+                <span class="slds-button slds-radio_button">
+                  <input type="radio" name="example-unique-name-204" id="example-unique-id-207" value="tuesday" aria-describedby="error-unique-id-205" />
+                  <label class="slds-radio_button__label" for="example-unique-id-207">
+                    <span class="slds-radio_faux">Student Alumni</span>
+                  </label>
+                </span>
+                
+               
+                
+              </div>
+              <div id="error-unique-id-205" class="slds-form-element__help">This field is required</div>
+            </div>
+          </fieldset> -->
 
-            <lightning-combobox label="Select an Category" options={options} value={selectedValue} onchange={handleRegTypeChange} required></lightning-combobox>
-            <lightning-input type="text" label="Title" onchange={handleTitleChange} required></lightning-input>
-            <lightning-input type="text" label="First Name" onchange={handleFnameChange} required></lightning-input>
-            <lightning-input type="text" label="Last Name" onchange={handleLnameChange} required></lightning-input>
-            <lightning-input type="email" label="Email" onchange={handleEmailChange} required></lightning-input>
+          
+          <fieldset class="slds-form-element slds-form-element_compound">
+            <legend class="slds-form-element__legend slds-form-element__label"></legend>
+            <div class="slds-form-element__control">
+              <div class="slds-form-element__row">
+                <div class="slds-size_1-of-2">
+                  <div class="slds-form-element">
+                   
+                    <div class="slds-form-element__control">
+                      <!-- <input type="text" id="input-01" class="slds-input" /> -->
+                      <lightning-combobox label="Select an Category" options={options} value={userType} onchange={handleRegTypeChange} required></lightning-combobox>
+           
+                    </div>
+                  </div>
+                </div>
+                <div class="slds-size_1-of-2">
+                 
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+
+             
+            
+            <fieldset class="slds-form-element slds-form-element_compound">
+              <legend class="slds-form-element__legend slds-form-element__label"></legend>
+              <div class="slds-form-element__control">
+                <div class="slds-form-element__row">
+                  <div class="slds-size_1-of-2">
+                    <div class="slds-form-element">
+                     
+                      <div class="slds-form-element__control">
+                        <!-- <input type="text" id="input-01" class="slds-input" /> -->
+                        <lightning-input type="text" label="First Name" onchange={handleFnameChange} value={firstName} required></lightning-input>
+           
+                      </div>
+                    </div>
+                  </div>
+                  <div class="slds-size_1-of-2">
+                    <div class="slds-form-element">
+                     
+                      <div class="slds-form-element__control">
+                        <!-- <input type="text" id="input-02" class="slds-input" /> -->
+                        <lightning-input type="text" label="Last Name" onchange={handleLnameChange} value={lastName} required></lightning-input>
+           
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="slds-form-element slds-form-element_compound">
+              <legend class="slds-form-element__legend slds-form-element__label"></legend>
+              <div class="slds-form-element__control">
+                <div class="slds-form-element__row">
+                  <div class="slds-size_1-of-2">
+                    <div class="slds-form-element">
+                     
+                      <div class="slds-form-element__control">
+                        <!-- <input type="text" id="input-01" class="slds-input" /> -->
+                        <lightning-input type="text" label="Title" onchange={handleTitleChange} value={title} required></lightning-input>
+        
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="slds-size_1-of-2">
+                    <div class="slds-form-element">
+                     
+                      <div class="slds-form-element__control">
+                        <!-- <input type="text" id="input-02" class="slds-input" /> -->
+                        <lightning-input type="email" label="Email" onchange={handleEmailChange} value={email} required></lightning-input>
               <p class="slds-text-color_error">{errorEmailMessage}</p>
               <div if:true={errorEmailBlock} class="slds-text-color_error">{errorEmailDupicateMessage}</div>
-              <br />
-              
-            <lightning-input label="Password" type="password" value={password} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handlePasswordChange} required ></lightning-input>
-            <lightning-input label="Confirm Password" type="password" value={confirmPassword} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handleConfirmPasswordChange} required></lightning-input>
+             
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+
+
+            
+            
+              <fieldset class="slds-form-element slds-form-element_compound">
+                <legend class="slds-form-element__legend slds-form-element__label"></legend>
+                <div class="slds-form-element__control">
+                  <div class="slds-form-element__row">
+                    <div class="slds-size_1-of-2">
+                      <div class="slds-form-element">
+                       
+                        <div class="slds-form-element__control">
+                          <!-- <input type="text" id="input-01" class="slds-input" /> -->
+                          <lightning-input label="Password" type="password" value={password} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handlePasswordChange} required ></lightning-input>
+           
+                        </div>
+                      </div>
+                    </div>
+                    <div class="slds-size_1-of-2">
+                      <div class="slds-form-element">
+                       
+                        <div class="slds-form-element__control">
+                          <!-- <input type="text" id="input-02" class="slds-input" /> -->
+                          <lightning-input label="Confirm Password" type="password" value={confirmPassword} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onchange={handleConfirmPasswordChange} required></lightning-input>
                 <div if:true={showPasswordError} class="slds-text-color_error">Passwords do not match</div>
                 <br/>
-            <lightning-input type="checkbox" label="I agree to the Terms & Conditions." onchange={handleAgreeTermChange} required></lightning-input>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+             
+            <lightning-input type="checkbox" label="I agree to the Terms & Conditions." checked={agreeTerm} onchange={handleAgreeTermChange} required></lightning-input>
+              <br />
+          
+              <button class="slds-button slds-button_brand" onclick={handleRegisterClick}>Sign Up</button>
               <br />
               <div if:true={errorBlock} class="slds-align_absolute-center slds-text-color_error">{errorMessage}</div>
-              <br />
-              <button class="slds-button slds-button_outline-brand" onclick={handleRegisterClick}>Sign Up</button>
-              <br />
+            
+              <div if:true={successBlock} class="slds-align_absolute-center slds-text-color_success">{successMessage}</div>
+             
+          
+            
              
         </div>
     </lightning-card>
+
+  
+
+   
  </template>

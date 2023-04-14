@@ -1,22 +1,20 @@
-import { LightningElement,track,wire } from 'lwc';
+import { LightningElement,track } from 'lwc';
 import isguest from '@salesforce/user/isGuest';
 import createUser from '@salesforce/apex/CommunityRegistrationController.createUser';
 import checkApiCallAccess from '@salesforce/apex/CommunityRegistrationController.checkApiCallAccess';
-import CommunityUserCheck from '@salesforce/apex/CommunityRegistrationController.CommunityUserCheck'
 import isEmailExist from '@salesforce/apex/CommunityRegistrationController.isEmailExist';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-
+import MY_IMAGE from '@salesforce/resourceUrl/RegisterBackground';
 
 export default class CommunityRegistration extends LightningElement {
     @track userType = 0;
-    @track title;
-    @track firstName;
-    @track lastName;
-    @track email;
-    @track password;
-    @track confirmPassword;
-    @track email;
-    @track agreeTerm;
+    @track title = '';
+    @track firstName = '';
+    @track lastName = '';
+    @track password = '';
+    @track confirmPassword = '';
+    @track email = '';
+    @track agreeTerm = false;
     @track showPasswordError = false;
     @track errorMessage = '';
     @track checkApexClass = '';
@@ -25,13 +23,15 @@ export default class CommunityRegistration extends LightningElement {
     @track errorEmailBlock = false;
     @track errorCheck;
     @track communityNickname;
-
+    @track successBlock = false;
+    @track successMessage = '';
+    imageUrl = MY_IMAGE;
     //This method is for get the user agree term & Condtion yes or not !
     handleAgreeTermChange(event) {
 
       checkApiCallAccess({ name: 'Student'}).then(result => {
 
-        //console.log('variable:', result);
+      console.log('variable:', result);
 
       });
      
@@ -53,7 +53,7 @@ export default class CommunityRegistration extends LightningElement {
         this.userType = event.detail.value;
         //console.log("Select an Category > : "+this.userType);
         this.userType = event.detail.value;
-        if (this.userType.length == 0) {
+        if (this.userType.length === 0) {
             this.errorBlock = true;
             this.errorMessage = 'Complete Category field.';
         } else {
@@ -65,12 +65,7 @@ export default class CommunityRegistration extends LightningElement {
 
       handleTitleChange(event){
         this.title = event.target.value;
-        const eventData = new ShowToastEvent({
-          title: 'Success',
-          message: 'Account created successfully!',
-          variant: 'success',
-      });
-      this.dispatchEvent(eventData);
+       
       }
      
       handleFnameChange(event){
@@ -84,6 +79,12 @@ export default class CommunityRegistration extends LightningElement {
       handleEmailChange(event){
 
         if (!event.target.validity.valid) {
+          const ErrorEvent = new ShowToastEvent({
+            title: 'Error',
+            message: 'Please enter a valid email address!',
+            variant: 'error',
+        });
+        this.dispatchEvent(ErrorEvent);
           this.errorEmailMessage = 'Please enter a valid email address';
         } else {
          
@@ -91,6 +92,15 @@ export default class CommunityRegistration extends LightningElement {
             isEmailExist({ email: event.detail.value}).then(result => {
           
             if(result){
+
+              const ErrorEvent = new ShowToastEvent({
+                title: 'Error',
+                message: 'E-Mail address already exists!',
+                variant: 'error',
+            });
+            this.dispatchEvent(ErrorEvent);
+
+
               this.errorEmailBlock = true;
               this.errorEmailDupicateMessage = 'E-Mail address already exists!';
             }
@@ -130,16 +140,11 @@ export default class CommunityRegistration extends LightningElement {
 
       handleRegisterClick(){
 
-        if (this.userType == 0) {
+        if (this.userType === 0) {
           this.errorBlock = true;
           this.errorMessage = 'Error : Complete Category field!';
         }
-        else if(!this.title){
-
-          this.errorBlock = true;
-          this.errorMessage = 'Error : Complete Title field!';
-  
-        } 
+       
         else if(!this.firstName){
 
           this.errorBlock = true;
@@ -151,7 +156,12 @@ export default class CommunityRegistration extends LightningElement {
           this.errorBlock = true;
           this.errorMessage = 'Error : Complete Last Name field!';
   
-        }
+        } else if(!this.title){
+
+          this.errorBlock = true;
+          this.errorMessage = 'Error : Complete Title field!';
+  
+        } 
         else if(!this.email){
 
           this.errorBlock = true;
@@ -187,10 +197,21 @@ export default class CommunityRegistration extends LightningElement {
 
                 console.log('login result---'+result, typeof result);
                 
-                if(result != null && result != undefined && result == true){
+                if(result != null && result !== undefined && result === true){
 
                   this.errorEmailBlock = true;
                   this.errorEmailDupicateMessage = 'E-Mail address already exists!';
+
+                  const ErrorEvent = new ShowToastEvent({
+                    title: 'Error',
+                    message: 'E-Mail address already exists!',
+                    variant: 'error',
+                });
+                this.dispatchEvent(ErrorEvent);
+
+
+
+
                  // this.errorTooltipDisplayData.email = 'tooltiptext tooltipShow tooltipError';
 
                  // this.showTermsAndConditionsLoading = false;
@@ -201,25 +222,29 @@ export default class CommunityRegistration extends LightningElement {
                 this.errorEmailDupicateMessage = '';
 
                 createUser({ userType: this.userType,title:this.title, communityNickname: this.firstName,firstName: this.firstName, lastName: this.lastName, email: this.email, password: this.password}
-                ).then((result) => {
+                ).then((results) => {
                                         
-                              if(result){            
-                                            
-                                 //window.location.href = result;
-
-                                 const event = new ShowToastEvent({
-                                  title: 'Success',
-                                  message: 'Account created successfully!',
-                                  variant: 'success',
-                              });
-                              this.dispatchEvent(event);
+                              if(results){
                               this.userType = null;
                               this.title = '';
                               this.firstName = '';
                               this.lastName = '';
                               this.password = '';
+                              this.email = '';
                               this.confirmPassword = '';
                               this.agreeTerm = false;
+                              
+                              this.successBlock = true;
+                              this.successMessage = 'Account created successfully!';
+
+                               const SuccessEvent = new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Account created successfully! Please check Email and Verify.',
+                    variant: 'success',
+                });
+                this.dispatchEvent(SuccessEvent);
+
+
 
                           }
                  }).catch((error) => {
@@ -227,8 +252,8 @@ export default class CommunityRegistration extends LightningElement {
                            console.log('error-',error);   
                            if(error && error.body && error.body.message){
 
-                          this.showTermsAndConditions = false;
-                          this.errorCheck = true;
+                         
+                          this.errorBlock = true;
                           this.errorMessage = error.body.message;
            
                            }           
@@ -236,11 +261,13 @@ export default class CommunityRegistration extends LightningElement {
                   });
               }
             }).catch((error) => {
-                    this.error = error;
-
+                      this.error = error;
+                      this.errorBlock = true;
+                          this.errorMessage = error;
                       if(error && error.body && error.body.message){
-                          
                           console.log('error msg-', error.body.message);
+                          this.errorBlock = true;
+                          this.errorMessage = error.body.message;
                       }
                 });
         }
