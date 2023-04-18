@@ -145,12 +145,19 @@ global without sharing class CommunityRegistrationController {
                     newCustomerUser.ContactId = newContact.Id;
                     newCustomerUser.ProfileId = profileID; // Replace with the desired Customer Community Plus profile Id
                     // //insert newCustomerUser;
+                    newCustomerUser.LanguageLocaleKey = 'en_US';
                     newCustomerUser.IsActive = false;
-                    userId = Site.createPortalUser(newCustomerUser, accountId, password);
+                    
                    
+                    userId = Site.createPortalUser(newCustomerUser, accountId, password);
+
+                 
+
                     if (userId != null) {
                 
                         String emailResult = sendVerfyEMail(newCustomerUser, userId);
+
+                       
                         
                         if (password != null && password.length() > 1) {
                             ApexPages.PageReference pageRef = Site.login(uniqueCommunityNickName, password, null);
@@ -162,48 +169,12 @@ global without sharing class CommunityRegistrationController {
                             return page.getUrl();
                         }
                     }
-
-                   // try {
-                        // String subject1 = 'Test Emailww';
-                        // String body1 = 'Helloqw';
-                        // String toSend1 = 'tarungupta051@gmail.com';
-                        // String activationCode = EncodingUtil.base64Encode(Crypto.generateDigest('SHA1', Blob.valueOf(body1 + ':' + toSend1)));
-                        // EmailTemplate Emailtempl=[SELECT Id, Name, body FROM EmailTemplate WHERE Name ='Verify Community User'];
-                        // Messaging.reserveSingleEmailCapacity(1);
-                        // Messaging.SingleEmailMessage mail1 = new Messaging.SingleEmailMessage();
-                        // String[] toAddresses1 = new String[] {toSend1};
-                        // mail1.setToAddresses(toAddresses1);
-                        // mail1.setTemplateId(Emailtempl.id);
-                        // mail1.setSubject(subject1);
-                        // mail1.setHtmlBody(Emailtempl.Body.replace('{!User.FirstName}', 'New User tarun').replace('{!User.ActivationCode}', activationCode));
-                        // Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail1 });
-                    //     String subject1 = 'Test Emailww';
-                    //     String body1 = 'Helloqw';
-                    //     String toSend1 = 'tarungupta051@gmail.com';
-                    //     String activationCode = EncodingUtil.base64Encode(Crypto.generateDigest('SHA1', Blob.valueOf(body1 + ':' + toSend1)));
-                    //     EmailTemplate Emailtempl=[SELECT Id, Name, body FROM EmailTemplate WHERE Name ='Verify Community User'];
-                    //      Messaging.reserveSingleEmailCapacity(1);
-                    //      Messaging.SingleEmailMessage mail1 = new Messaging.SingleEmailMessage();
-                    //      String[] toAddresses1 = new String[] {toSend1};
-                    //      mail1.setToAddresses(toAddresses1);
-                    //      mail1.setTemplateId(Emailtempl.id);
-                    //      mail1.setSubject(subject1);
-                    //      mail1.setHtmlBody(Emailtempl.Body.replace('{!User.FirstName}', 'New User tarun').replace('{!User.ActivationCode}', activationCode));
-                    //      Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail1 });
-
-                    //     MsgEMail = true;
-                    //     erM = 'success';
-                    // } catch(Exception e) {
-                    //     System.debug(e.getMessage());
-                    //     MsgEMail = false;
-                    //     erM=  e.getMessage();   
-                    // }
                     
         } catch(Exception e) {
             System.debug(e.getMessage());
         }
 
-        return erM+'=>'+profileIDText+uniqueCommunityNickName+'=>'+communityAccountId+'New Contact record created with Id: ' + newContact.Id+'=>EmailStatus'+MsgEMail;
+        return profileIDText+uniqueCommunityNickName+'=>'+communityAccountId+'New Contact record created with Id: ' + newContact.Id+'=>EmailStatus'+MsgEMail;
 
     }
             
@@ -218,16 +189,31 @@ global without sharing class CommunityRegistrationController {
     @AuraEnabled
     public static string sendVerfyEMail(User usr, String userId){
         try {
-
+            String encodedEmail = EncodingUtil.base64Encode(Crypto.generateDigest('SHA1', Blob.valueOf(usr.Email)));            
+          
+           // String activationCode = EncodingUtil.base64Encode(Crypto.generateDigest('SHA1', Blob.valueOf(usr.Username + ':' + usr.Email)));            
+           
+           // String tokenId = EncodingUtil.convertToHex(Crypto.generateDigest('SHA256', userId + String.valueOf(System.now().getTime())));
+            
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
             String activationCode = EncodingUtil.base64Encode(Crypto.generateDigest('SHA1', Blob.valueOf(usr.Username + ':' + usr.Email)));            
+            
+            //String verificationUrl = 'https://tarungupta-sfdx-dev-ed.develop.my.site.com/learningportal/s/verify?token=' + activationCode + '&email=' + encodedEmail;
+            String verificationUrl = 'https://tarungupta-sfdx-dev-ed.develop.my.site.com/learningportal/s/ActivateUser?tokenc=' + activationCode + '&email=' + encodedEmail;
+
+           
             List<EmailTemplate> VerfyTemplate = new List<EmailTemplate>([Select Id from EmailTemplate where name = 'Verify Email']);      
-            mail.setSenderDisplayName('Learning Portol');
+            mail.setSenderDisplayName('learning institute Portal');
             mail.setTargetObjectId(userId);
             mail.setTemplateId(VerfyTemplate[0].Id);
-            mail.setHtmlBody(VerfyTemplate[0].Body.replace('{!User.FirstName}', usr.FirstName ).replace('{!User.ActivationCode}', activationCode));      
             mail.setSaveAsActivity(false);
+            mail.setSubject('Verify your email address');
+            String plainTextBody = 'Dear ' + usr.FirstName + ',\n\nThank you for Registered.! We hope you are enjoying it.\n\n Please click on the following link to verify your email address: \n    Verification Link : ' + verificationUrl + '.\n\nThanks again,\n If you have any questions, please contact us at support@learningInstitute.com \n\n The team \n Learning Institute Support';
+            mail.setPlainTextBody(plainTextBody);
 
+
+           // mail.setPlainTextBody(emailTemplateBody.replace('{!VerificationUrl}', verificationUrl));
+           
             Messaging.sendEmail( new List<Messaging.SingleEmailMessage>{mail} );
 
             return 'success';
@@ -247,7 +233,6 @@ global without sharing class CommunityRegistrationController {
             mail.setSenderDisplayName('Learning Portol');
             mail.setTargetObjectId(userId);
             mail.setTemplateId(welcomeTemplate[0].Id);
-            mail.setHtmlBody(welcomeTemplate[0].Body.replace('{!User.FirstName}', usr.FirstName ).replace('{!User.ActivationCode}', activationCode));      
             mail.setSaveAsActivity(false);
 
             Messaging.sendEmail( new List<Messaging.SingleEmailMessage>{mail} );
